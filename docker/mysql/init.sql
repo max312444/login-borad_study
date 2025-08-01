@@ -15,6 +15,13 @@ CREATE TABLE IF NOT EXISTS student (
     birth DATE                                    -- 생년월일
 );
 
+-- users 테이블 생성
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- -- 데이터베이스 생성
 -- CREATE DATABASE IF NOT EXISTS myapp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -29,12 +36,7 @@ CREATE TABLE IF NOT EXISTS student (
 -- -- 테이블 생성
 -- USE myapp;
 
--- CREATE TABLE IF NOT EXISTS users (
---     id INT AUTO_INCREMENT PRIMARY KEY,
---     username VARCHAR(50) NOT NULL UNIQUE,
---     email VARCHAR(100),
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
+
 
 -- -- 초기 데이터 삽입
 -- INSERT INTO users (username, email) VALUES
