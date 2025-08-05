@@ -1,58 +1,60 @@
-<?php
-// 세션 시작 (로그인 정보 유지 또는 오류 메시지 전달용)
-session_start();
+<?php session_start();
 
-// DB 접속 정보 포함 (클래스 db_info에 상수로 정의되어 있음)
-require_once('./db_conf.php');
+// db 접속 정보 가져오기
+require_once("./db_conf.php");
 
-// MySQL 데이터베이스 연결 시도
-$db_conn = new mysqli(db_info::DB_URL, db_info::USER_ID, db_info::PASSWD, db_info::DB);
+// db 연결 설정 구문
+$db_const = new mysqli(
+    db_info::DB_URL,
+    db_info::USER_ID,
+    db_info::PASSWD,
+    db_info::DB
+);
 
-// 연결 실패 시: 세션에 오류 메시지를 저장하고 로그인 처리 페이지로 이동
+// 연결 실패 처리 구문
 if ($db_conn->connect_errno) {
     $_SESSION['error'] = "DB 연결 실패";
     header("Location: login_process.php");
     exit;
 }
 
-// 사용자 입력값 전처리 (공백 제거 및 기본값 처리)
+// 사용자 입력
 $username_raw = trim($_POST['username'] ?? '');
 $password_raw = trim($_POST['password'] ?? '');
 
-// 입력값이 비어 있는 경우: 오류 메시지 설정 후 로그인 페이지로 리디렉션
-if ($username_raw === '' || $password_raw === '') {
-    $_SESSION['error'] = "아이디와 비밀번호를 모두 입력하세요.";
+// 유효성 검사
+if($username_raw === '' || $password_raw === '') {
+    $_SESSION['error'] = "아이디와 비밀번호를 전부 입력하십시오";
     header("Location: login.php");
     exit;
 }
 
-// SQL Injection 방지를 위한 문자열 이스케이프 처리 (실습용, 실무에선 prepared 사용 권장)
-$username = $db_conn->real_escape_string($username_raw);
+// sql 이젝션 방지용 문자열 이스케이프 처리
+$username = $db_const->real_escape_string($username_raw);
 
-// 사용자 정보 조회 쿼리 실행
-$query = "SELECT * FROM users WHERE username = '$username'";
-$result = $db_conn->query($query);
+// DB 조회
+$query = "SELECT * FROM users WHERE username = '$username";
+$result = $db_const->query($query);
 
-// DB 연결 종료 (리소스 반환)
-$db_conn->close();
+// DB 연결 종료
+$db_const->close();
 
-// 조회 결과가 존재하고 사용자 정보가 있을 경우
+// 사용자 조회 결과 확인 및 인증 처리
 if ($result && $row = $result->fetch_assoc()) {
-    // 비밀번호 일치 여부 확인 (password_hash()와 함께 사용되는 함수)
+    // DB의 비밀번호와 비교
     if (password_verify($password_raw, $row['password'])) {
-        // 로그인 성공: 세션에 사용자 정보 저장 후 웰컴 페이지로 이동
         $_SESSION['user_id'] = $row['id'];
         $_SESSION['name'] = $row['name'];
         header("Location: welcome.php");
         exit;
     } else {
-        // 비밀번호 불일치
+        // 일지하지 않을 때
         $_SESSION['error'] = "비밀번호가 틀렸습니다.";
         header("Location: login.php");
         exit;
     }
+// 아이디가 DB에 존재하지 않을 경우
 } else {
-    // 사용자 아이디가 존재하지 않음
     $_SESSION['error'] = "아이디가 존재하지 않습니다.";
     header("Location: login.php");
     exit;

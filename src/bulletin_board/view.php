@@ -24,9 +24,12 @@ $post = $result->fetch_assoc();
 <hr>
 <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
 
+
+
 <form action="edit.php" method="get">
     <input type="hidden" name="id" value="<?= $post['id'] ?>">
     <button type="submit">수정하기</button>
+    
 </form>
 
 <form action="delete_post.php" method="get">
