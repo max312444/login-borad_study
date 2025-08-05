@@ -8,8 +8,22 @@ if ($db_conn->connect_errno) {
 }
 $db_conn->set_charset("utf8mb4");
 
-$sql = "SELECT * FROM posts ORDER BY created_at DESC";
-$result = $db_conn->query($sql);
+// 페이지네이션
+$posts_per_page = 5;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = max($page - 1) * $posts_per_page;
+
+// 전체 페이지 수
+$result_total = $db_conn->query("SELECT COUNT(*) as total FROM posts");
+$total_row = $result_total->fetch_assoc();
+$total_posts = (int)$total_row['total'];
+$total_pages = ceil($total_posts / $posts_per_page);
+
+// 페이지에 해당하는 게시물만 가져오기
+$stmt = $db_conn->prepare("SELECT * FROM posts ORDER BY created_at DESC LIMIT ?, ?");
+$stmt->bind_param("ii", $offset, $posts_per_page);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +43,8 @@ $result = $db_conn->query($sql);
             <legend>게시물 목록</legend>
                 <table border="1" cellpadding="8" cellspacing="0" style="margin-top: 10px;">
             <tr>
-                <th>번호</th>
+                <th>순번</th>
+                <th>등록번호</th>
                 <th>제목</th>
                 <th>작성자</th>
                 <th>작성일</th>
@@ -41,6 +56,7 @@ $result = $db_conn->query($sql);
                 while ($row = $result->fetch_assoc()):
             ?>
             <tr>
+                <tb></tb>
                 <td><?= htmlspecialchars($row['id']) ?></td>
                 <td><?= htmlspecialchars($row['title']) ?></td>
                 <td><?= htmlspecialchars($row['name']) ?></td>
