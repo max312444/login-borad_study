@@ -5,21 +5,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>register</title>
 </head>
 <body>
     <h2>회원가입</h2>
-    <?php
-    // 연결 오류 경고 구문
-    if (isset($_SESSION['error'])) {
-        echo "<p style='color:red?" . htmlspecialchars($_SESSION['error']) . "</p>";
-        unset($_SESSION['error']);
-    }
-    ?>
 
-    <form acrion="register_process.php" method="post">
+    <?php if (isset($_SESSION['error']))
+        echo "<p style='color:red'>".htmlspecialchars($_SESSION['error'])."</p>";
+        unset($_SESSION['error']);
+    ?>
+    <form action="register_process.php" method="post">
         <fieldset>
-            <legend>정보 입력</legend>
+            <legend>회원정보 입력</legend>
             <label for="username">아이디: </label>
             <input type="text" id="username" name="username" required><br><br>
 

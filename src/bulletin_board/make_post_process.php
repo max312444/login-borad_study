@@ -6,7 +6,7 @@ require_once('./db_conf.php');
 $db_conn = new mysqli(db_info::DB_URL, db_info::USER_ID, db_info::PASSWD, db_info::DB);
 if ($db_conn->connect_errno) {
     $_SESSION['error'] = "DB 연결에 실패했습니다.";
-    header("Location: register.php");
+    header("Location: make_post.php");
     exit;
 }
 // 감지 언어 설정

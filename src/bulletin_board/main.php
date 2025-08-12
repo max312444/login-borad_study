@@ -8,10 +8,11 @@ if ($db_conn->connect_errno) {
 }
 $db_conn->set_charset("utf8mb4");
 
-// 페이지네이션
+// 페이지네이션 기본 값
 $posts_per_page = 5;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$page = max($page - 1) * $posts_per_page;
+$page = max($page, 1); 
+$offset = ($page - 1) * $posts_per_page;
 
 // 전체 페이지 수
 $result_total = $db_conn->query("SELECT COUNT(*) as total FROM posts");
@@ -35,20 +36,21 @@ $result = $stmt->get_result();
 </head>
 <body>
     <h1>게시판</h1>
-    <?php if (isset($_SESSION['error']))
-        echo "<p style='color:red'>".htmlspecialchars($_SESSION['error'])."</p>";
+    <?php if (isset($_SESSION['error'])) {
+        echo "<p style='color:red'>" . htmlspecialchars($_SESSION['error']) . "</p>";
         unset($_SESSION['error']);
-    ?>
-        <fieldset>
-            <legend>게시물 목록</legend>
-                <table border="1" cellpadding="8" cellspacing="0" style="margin-top: 10px;">
+    } ?>
+    
+    <fieldset>
+        <legend>게시물 목록</legend>
+        <table border="1" cellpadding="8" cellspacing="0" style="margin-top: 10px;">
             <tr>
-                <th>순번</th>
                 <th>등록번호</th>
                 <th>제목</th>
                 <th>작성자</th>
                 <th>작성일</th>
                 <th>수정일</th>
+                <th>상세보기</th>
             </tr>
 
             <?php
@@ -56,30 +58,43 @@ $result = $stmt->get_result();
                 while ($row = $result->fetch_assoc()):
             ?>
             <tr>
-                <tb></tb>
                 <td><?= htmlspecialchars($row['id']) ?></td>
                 <td><?= htmlspecialchars($row['title']) ?></td>
                 <td><?= htmlspecialchars($row['name']) ?></td>
                 <td><?= htmlspecialchars($row['created_at']) ?></td>
                 <td><?= $row['updated_at'] ? $row['updated_at'] : '-' ?></td>
-                    <td>
+                <td>
                     <form action="view.php" method="get" style="display:inline;">
-                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                    <button type="submit">상세보기</button>
+                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                        <button type="submit">상세보기</button>
                     </form>
                 </td>
             </tr>
             <?php
                 endwhile;
-            if ($result->num_rows === 0): ?>
-                <tr>
-                    <td colspan="4">게시물이 없습니다.</td>
-                </tr>
-            <?php endif;
+                if ($result->num_rows === 0): ?>
+                    <tr>
+                        <td colspan="6">게시물이 없습니다.</td>
+                    </tr>
+                <?php endif;
             }
             ?>
         </table>
-        <form action="make_post.php" method="post">
+
+        <!-- 페이지네이션 (이전/다음) -->
+        <div style="margin-top:10px;">
+            <?php if ($page > 1): ?>
+                <a href="?page=<?= $page - 1 ?>">이전</a>
+            <?php endif; ?>
+
+            <span>페이지 <?= $page ?> / <?= $total_pages ?></span>
+
+            <?php if ($page < $total_pages): ?>
+                <a href="?page=<?= $page + 1 ?>">다음</a>
+            <?php endif; ?>
+        </div>
+
+        <form action="make_post.php" method="post" style="margin-top:10px;">
             <input type="submit" value="게시물 작성">
         </form>
     </fieldset>
