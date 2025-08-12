@@ -33,7 +33,7 @@ if($username_raw === '' || $password_raw === '') {
 $username = $db_const->real_escape_string($username_raw);
 
 // DB 조회
-$query = "SELECT * FROM users WHERE username = '$username";
+$query = "SELECT * FROM users WHERE username = '$username'";
 $result = $db_const->query($query);
 
 // DB 연결 종료
