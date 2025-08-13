@@ -5,31 +5,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>register</title>
 </head>
 <body>
     <h2>회원가입</h2>
-    <?php
-    // 연결 오류 경고 구문
-    if (isset($_SESSION['error'])) {
-        echo "<p style='color:red?" . htmlspecialchars($_SESSION['error']) . "</p>";
+    
+    <?php if(isset($_SESSION['error']))
+        echo "<p style='color:red'>". htmlspecialchars($_SESSION['error']). "</p>";
         unset($_SESSION['error']);
-    }
     ?>
-
-    <form acrion="register_process.php" method="post">
+    <form action="register_process.php" method="post">
         <fieldset>
-            <legend>정보 입력</legend>
-            <label for="username">아이디: </label>
+            <legend>회원가입 정보 입력칸</legend>
+            <label>아이디: </label>
             <input type="text" id="username" name="username" required><br><br>
 
-            <label for="password">비밀번호: </label>
-            <input type="password" id="password" name="password" required><br><br>
+            <label>비밀번호: </label>
+            <input type="password" id="password"name="password" required><br><br>
 
-            <label for="name">이름: </label>
+            <label>이름: </label>
             <input type="text" id="name" name="name" required><br><br>
 
-            <input type="submit" value="회원가입">
+            <button type="submit">회원가입</button>
         </fieldset>
     </form>
 </body>

@@ -17,8 +17,8 @@
     <form action="login_process.php" method="post">
         <fieldset>
             <legend>로그인 정보 입력</legend>
-            <label>아이디: <input type="text" name="username" required></label>
-            <label>비밀번호: <input type="password" name="password" required></label>
+            <label>아이디: <input type="text" name="username" required></label><br>
+            <label>비밀번호: <input type="password" name="password" required></label><br>
             <button type="submit">로그인</button>
         </fieldset>
     </form>

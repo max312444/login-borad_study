@@ -30,8 +30,8 @@ if ($username_raw === '' || $password_raw === '' || $name_raw === '') {
 $password_hashed = password_hash($password_raw, PASSWORD_DEFAULT);
 
 $username = $db_conn->real_escape_string($username_raw);
-$password_raw = $db_conn->real_escape_string($password_hashed);
-$name_raw = $db_conn->real_escape_string($name_raw);
+$password = $db_conn->real_escape_string($password_hashed);
+$name = $db_conn->real_escape_string($name_raw);
 
 $sql = "
         INSERT INTO users (username, password, name)
