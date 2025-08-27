@@ -5,5 +5,3 @@ class db_info {
     const PASSWD = 'root';
     const DB = 'gsc';
 }
-
-
