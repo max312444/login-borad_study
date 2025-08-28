@@ -44,6 +44,9 @@ $result = $stmt->get_result();
 </head>
 <body>
     <h2>게시판 메인 화면</h2>
+    <form action="logout.php">
+        <button type="submit">로그아웃</button>
+    </form>
     <?php if (isset($_SESSION['error'])) {
         echo "<p style='color:red'>" . htmlspecialchars($_SESSION['error']);
         unset($_SESSION['error']);
