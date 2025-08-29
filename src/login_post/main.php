@@ -45,13 +45,16 @@ $result = $stmt->get_result();
 <body>
     <h2>게시판 메인 화면</h2>
     <form action="logout.php">
-        <button type="submit">로그아웃</button>
+        <button type="submit">로그아웃</button><br>
     </form>
     <?php if (isset($_SESSION['error'])) {
         echo "<p style='color:red'>" . htmlspecialchars($_SESSION['error']);
         unset($_SESSION['error']);
     } ?>
 
+        <form action="make_post.php">
+            <button type="submit">게시물 작성</button>
+        </form>
     <fieldset>
         <legend>게시물 목록</legend>
         <table border="1" cellpadding="8" cellspacing="0" style="margin-top: 10px;">
@@ -89,8 +92,16 @@ $result = $stmt->get_result();
                 <?php endif;
         }
         ?>
-        <form action="make_post.php">
-            <button type="submit">게시물 작성</button>
-        </form>
+        
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+            <a href="#">1</a>
+            <a class="active" href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">6</a>
+            <a href="#">&raquo;</a>
+        </div>
 </body>
 </html>

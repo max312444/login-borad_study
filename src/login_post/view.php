@@ -25,9 +25,10 @@ $post = $result->fetch_assoc();
 ?>
 
 <h2><?= htmlspecialchars($post['id']) ?></h2>
-<p><strong>작성자 : </strong> <?= htmlspecialchars($post['name']) ?></p>
-<p><strong>작성일 : </strong> <?= htmlspecialchars($post['created_at']) ?></p>
-<p><strong>수정일 : </strong> <?= htmlspecialchars($post['updated_at'] ?? '-') ?></p>
+<p>제목 : <?= htmlspecialchars($post['title']) ?></p>
+<p>작성자 : <?= htmlspecialchars($post['name']) ?></p>
+<p>작성일 : <?= htmlspecialchars($post['created_at']) ?></p>
+<p>수정일 : <?= htmlspecialchars($post['updated_at'] ?? '-') ?></p>
 <hr>
 <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
 
