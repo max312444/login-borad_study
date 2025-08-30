@@ -34,13 +34,22 @@ $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판 메인 화면</title>
+    <style>
+        .pagination a {
+            margin: 0 4px;
+            text-decoration: none;
+        }
+        .pagination .active {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <h2>게시판 메인 화면</h2>
@@ -52,9 +61,9 @@ $result = $stmt->get_result();
         unset($_SESSION['error']);
     } ?>
 
-        <form action="make_post.php">
-            <button type="submit">게시물 작성</button>
-        </form>
+    <form action="make_post.php">
+        <button type="submit">게시물 작성</button>
+    </form>
     <fieldset>
         <legend>게시물 목록</legend>
         <table border="1" cellpadding="8" cellspacing="0" style="margin-top: 10px;">
@@ -77,31 +86,39 @@ $result = $stmt->get_result();
                 <td><?= htmlspecialchars($row['name']) ?></td>
                 <td><?= htmlspecialchars($row['created_at']) ?></td>
                 <td><?= $row['updated_at'] ? $row['updated_at'] : '-' ?></td>
-                <td><form action="view.php" method="get" style="display:inline;">
+                <td>
+                    <form action="view.php" method="get" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $row['id'] ?>">
                         <button type="submit">상세보기</button>
                     </form>
                 </td>
             </tr>
-        <?php
-            endwhile;
+            <?php
+                endwhile;
                 if ($result->num_rows === 0): ?>
                 <tr>
                     <td colspan="6">게시물이 없습니다!</td>
                 </tr>
                 <?php endif;
-        }
-        ?>
-        
-        <div class="pagination">
-            <a href="#">&laquo;</a>
-            <a href="#">1</a>
-            <a class="active" href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">6</a>
-            <a href="#">&raquo;</a>
-        </div>
+            }
+            ?>
+        </table>
+    </fieldset>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <?php if ($page > 1): ?> <!-- $page 가 1보다 클 때는 이전 버튼 사용 가능. 1보다 작거나 같으면 이전 버튼 없음 -->
+            <a href="?page=<?= $page - 1 ?>"> 이전</a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $total_pages; $i++): ?> <!-- 1부터 페이지 수만큼 반복. 번호 클릭시 해당 페이지에 들어있는 게시물들 출력 -->
+            <a href="?page=<?= $i ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a> <!-- 현재페이지가 몇번인지 강조 -->
+        <?php endfor; ?>
+
+        <?php if ($page < $total_pages): ?> <!-- $page가 마지막 페이지보다 작으면 다음 버튼 사용 마지막에 도착하면 다음 버튼 없음 -->
+            <a href="?page=<?= $page + 1 ?>">다음</a>
+        <?php endif; ?>
+    </div>
+
 </body>
 </html>
